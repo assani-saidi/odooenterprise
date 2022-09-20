@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-call="web.html_layout">
+        <t t-call="web.basic_layout">
+            <script type="text/javascript" src="/webcam/static/src/js/html5-qrcode.min.js"/>
+            <script>
+                console.log(Html5QrcodeScanner)
+            </script>
+        </t>
+    </t>
+</templates>

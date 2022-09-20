@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
+         <xpath expr="//div[hasclass('pads')]/div[hasclass('control-buttons')]" position="before">
+             <style>
+                 .scanning-video{
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    z-index: 999;
+                    display: none;
+                    background-color: rgba(0, 0, 0, 0.65);
+                 }
+                 .video-container{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                    flex: 1;
+                 }
+                 .renderer{
+                    width: 40%;
+                 }
+             </style>
+             <div class="scanning-video" id="video-container">
+                 <div class="video-container">
+                     <div id="qr-reader" class="renderer"></div>
+                 </div>
+             </div>
+             <div class="w-btn-container">
+                <div class="w-btn" id="camera-button">
+                    <i class="fa-regular fa-barcode-scan" />Scan Barcode Using Camera
+                </div>
+            </div>
+             <script>
+                var html5QrCode = null;
+
+                 var button = document.getElementById('camera-button', startCamera);
+
+                 button.addEventListener('click', startCamera);
+
+                 async function getAvailableCameras(){
+                    var devices = await Html5Qrcode.getCameras();
+                    if(devices){
+                        console.log(devices);
+                        startCamera(devices[0].id);
+                    }
+                 }
+
+                 function startCamera(id){
+                    var elem = document.getElementById('video-container');
+                    elem.style.display = "block";
+                    html5QrCode = new Html5Qrcode("qr-reader");
+                    var config = {fps: 10, qrbox:{width: 320, height: 200}};
+                    html5QrCode.start({ facingMode: "environment" }, config, decodeBarcode);
+                 }
+
+                 async function decodeBarcode(decodedText, decodedResult){
+                    console.log(decodedResult);
+                    var elem = document.getElementById('video-container');
+                    elem.style.display = 'none';
+                    input = document.querySelector("input");
+                    input.value= decodedText;
+                    await html5QrCode.stop();
+                 }
+                </script>
+        </xpath>
+    </t>
+</templates>
